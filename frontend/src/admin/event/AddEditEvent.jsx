@@ -26,7 +26,7 @@ const AddEditEvent = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = "Add/Edit Event";
+        document.title = "AddEdit Event";
         if (id) {
             handleEdit(id);  
         }
@@ -46,9 +46,7 @@ const AddEditEvent = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        const newValue = ['general_ticket_price', 'vip_ticket_price'].includes(name) 
-            ? parseFloat(value) || 0.00 
-            : value;
+        const newValue = ['general_ticket_price', 'vip_ticket_price'].includes(name)  ? parseFloat(value) || 0.00    : value;
 
         setEvent((prevData) => ({
             ...prevData,
@@ -145,7 +143,9 @@ const AddEditEvent = () => {
         }
         return errors;
     };
+    // console.log(event)
     const eventimageurl = `http://localhost:8081/eventImage/${event.event_image ? event.event_image.split("\\").pop() : ''}`;
+    // console.log(eventimageurl)
 
     return (
         <div className="dashboard-layout">
@@ -161,7 +161,7 @@ const AddEditEvent = () => {
                                 <h4 className="event-title">{id ? 'Edit Event' : 'Create Event'}</h4>
                                 <form className="event-form" onSubmit={handleSubmit}>
                                     <div className="form-group">
-                                        <label htmlFor="title"><b>Title:</b></label>
+                                        <label htmlFor="title" style={{display:"flex"}}><b>Title:</b></label>
                                         <input
                                             type="text"
                                             id="title"
@@ -173,7 +173,7 @@ const AddEditEvent = () => {
                                         {errors.title && (<span className="error-text">{errors.title}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="description"><b>Description:</b></label>
+                                        <label htmlFor="description" style={{display:"flex"}}><b>Description:</b></label>
                                         <textarea
                                             id="description"
                                             name="description"
@@ -184,7 +184,7 @@ const AddEditEvent = () => {
                                         {errors.description && (<span className="error-text">{errors.description}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="eventDate"><b>Date:</b></label>
+                                        <label htmlFor="eventDate" style={{display:"flex"}}><b>Date:</b></label>
                                         <input
                                             type="date"
                                             id="eventDate"
@@ -195,7 +195,7 @@ const AddEditEvent = () => {
                                         {errors.eventDate && (<span className="error-text">{errors.eventDate}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="eventTime"><b>Time:</b></label>
+                                        <label htmlFor="eventTime" style={{display:"flex"}}><b>Time:</b></label>
                                         <input
                                             type="time"
                                             id="eventTime"
@@ -206,7 +206,7 @@ const AddEditEvent = () => {
                                         {errors.eventTime && (<span className="error-text">{errors.eventTime}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="location"><b>Location:</b></label>
+                                        <label htmlFor="location" style={{display:"flex"}}><b>Location:</b></label>
                                         <input
                                             type="text"
                                             id="location"
@@ -218,7 +218,7 @@ const AddEditEvent = () => {
                                         {errors.location && (<span className="error-text">{errors.location}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="eventImage"><b>Event Image:</b></label>
+                                        <label htmlFor="eventImage" style={{display:"flex"}}><b>Event Image:</b></label>
                                         <input
                                             type="file"
                                             id="eventImage"
@@ -229,7 +229,7 @@ const AddEditEvent = () => {
                                         {errors.eventImage && (<span className="error-text">{errors.eventImage}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="privacy"><b>Privacy:</b></label>
+                                        <label htmlFor="privacy" style={{display:"flex"}}><b>Privacy:</b></label>
                                         <select
                                             name="privacy"
                                             id="privacy"
@@ -243,7 +243,7 @@ const AddEditEvent = () => {
                                         {errors.privacy && (<span className="error-text">{errors.privacy}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="general_ticket_price"><b>General Ticket Price:</b></label>
+                                        <label htmlFor="general_ticket_price" style={{display:"flex"}}><b>General Ticket Price:</b></label>
                                         <input
                                             type="text"
                                             id="general_ticket_price"
@@ -255,7 +255,7 @@ const AddEditEvent = () => {
                                         {errors.general_ticket_price && (<span className="error-text">{errors.general_ticket_price}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="vip_ticket_price"><b>VIP Ticket Price:</b></label>
+                                        <label htmlFor="vip_ticket_price" style={{display:"flex"}}><b>VIP Ticket Price:</b></label>
                                         <input
                                             type="text"
                                             id="vip_ticket_price"
@@ -267,7 +267,7 @@ const AddEditEvent = () => {
                                         {errors.vip_ticket_price && (<span className="error-text">{errors.vip_ticket_price}</span>)}
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="quantity"><b>Ticket Quantity:</b></label>
+                                        <label htmlFor="quantity" style={{display:"flex"}}><b>Ticket Quantity:</b></label>
                                         <input
                                             type="text"
                                             id="quantity"

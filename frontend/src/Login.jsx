@@ -19,7 +19,7 @@ const Login = () => {
     e.preventDefault();
     const newErrors = validateForm(email, password);
     setErrors(newErrors);
-  
+  // alert(checked)
     if (Object.keys(newErrors).length === 0) {
       try {
         const response = await axios.post('http://localhost:8081/api/login', { email, password },{headers:{ Authorization: `Bearer ${localStorage.getItem("token")}` }});
@@ -80,7 +80,8 @@ const Login = () => {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value,checked,type } = e.target;
+    console.log(e.target)
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
     
     if (name === 'email') {
@@ -93,6 +94,10 @@ const Login = () => {
   //   const response=await axios.get("http://localhost:8081/auth/google/callback");
   //   console.log(response.data)
   // }
+
+    const SocialHandler=async(social)=>{
+      window.location.href=`http://localhost:8081/auth/${social}`
+    }
 
   return (
     <div className="login-container">
@@ -130,10 +135,16 @@ const Login = () => {
         <p className="text-muted">Don't have an account? <Link to="/register" className="link">Register here</Link></p>
         <div className="divider">OR</div>
         <div className="social-login">
-            <a href="http://localhost:8081/auth/google"  className="social-btn google-btn">
+            <Link onClick={()=>SocialHandler("google")}  className="social-btn google-btn">
               <img src="https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVttoo4ucl7rsMASXW3Xr6GlXURCubE1tA=w3840-h2160-rw" alt="Google" />
               Sign in with Google
-            </a>
+            </Link>
+            OR
+            
+            <Link onClick={()=>{SocialHandler('facebook')}} className="social-btn google-btn">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Facebook_icon_2013.svg/120px-Facebook_icon_2013.svg.png?20161223201621" alt="Google" />
+              Sign in with FaceBook
+            </Link>
           
         </div>
       </div>

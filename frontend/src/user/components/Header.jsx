@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Header.css';
 
 const Header = () => {
   const handleLogout = () => {
-   
     localStorage.clear();
     window.location.href = '/';
   };

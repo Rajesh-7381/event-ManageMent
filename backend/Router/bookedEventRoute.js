@@ -2,7 +2,8 @@ const expres=require("express")
 const router=expres.Router();
 const bookeEventController=require("../controller/bookedEventController")
 
-router.post("/BookEvent",bookeEventController.bookEvent)
+router.post("/BookEvent/",bookeEventController.bookEvent)
+// router.post("/BookEvent/:event",bookeEventController.bookEvent)
 router.get("/checkQuantity",bookeEventController.checkQuantity)
 router.get("/ActiveEvents",bookeEventController.ActiveEvents)
 router.get("/userbookedOrderStatus/:email", bookeEventController.userbookedOrderStatus);

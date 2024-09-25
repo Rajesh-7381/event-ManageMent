@@ -1,6 +1,7 @@
 const bookmodel=require("../model/bookedEventModel")
 
 exports.bookEvent=async(req,res)=>{
+    
     const {choosenevent,ticketType,eventDate,quantity,ticket_price,final_price,user_id}=req.body;
     const newbookingEvent={choosenevent,ticketType,eventDate,quantity,ticket_price,final_price,user_id}
     try {

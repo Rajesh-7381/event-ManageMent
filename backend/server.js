@@ -6,12 +6,10 @@ const bodyparser=require("body-parser")
 const session = require('express-session');
 const passport=require("passport")
 const googleAuthStrategy=require("passport-google-oauth20").Strategy
-// const FacebookStrategy = require('passport-facebook').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const path=require("path")
 const jwt=require("jsonwebtoken")
-
-const fs = require('fs'); // Required to delete files
-
+const fs = require('fs'); 
 
 const app=express()
 app.use(cors())
@@ -20,7 +18,7 @@ app.use(bodyparser.json())
 app.use(session({secret: process.env.JWTSECRET, resave: false, saveUninitialized: false, cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }})); //maxage 24 hours
 app.use(passport.initialize())
 app.use(passport.session())
-// app.use(routerCheckAuth)
+// app.use(routerCheckAuth) 
 
 const userRoutes=require("./Router/userRoute")
 const eventRoutes=require("./Router/eventRoute")
@@ -29,6 +27,15 @@ const upload = require("./utils/multerConfig")
 app.use("/api",userRoutes )
 app.use("/api",eventRoutes )
 app.use("/api",bookeventRoutes )
+
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(today.getDate() );
+
+const year = yesterday.getFullYear();
+const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+const day = String(yesterday.getDate()).padStart(2, '0'); 
+const yearDateMonth = `${year}-${month}-${day}`;
 
 app.use('/profile', express.static(path.join(__dirname, 'uploads/profile')));
 app.use('/eventImage', express.static(path.join(__dirname, 'uploads/eventImage')));
@@ -93,7 +100,9 @@ app.patch("/update/:id", upload.single('eventImage'), (req, res) => {
 
 
 
-app.post("/addeditEvent",upload.single('eventImage'),(req,res)=>{
+app.post("/addeditEvent/:event",upload.single('eventImage'),(req,res)=>{
+    const event=req.params.event;
+    console.log(event)
     const {title,description,eventDate,eventTime,location,privacy,general_ticket_price,vip_ticket_price,ticket_price,quantity,organizer_id}=req.body
     const eventImage=req.file;
     // console.log(req.body)
@@ -124,11 +133,13 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
       { expiresIn: "1h" } 
     )
   
-    if (user.role === 1) {
-        res.redirect(`http://localhost:3000/dashboard2?token=${token}&role=${user.role}`);
-      } else {
-        res.redirect(`http://localhost:3000/dashboard2?token=${token}&role=${user.role}`);
-      }
+    // if (user.role === 1) {
+    //     res.redirect(`http://localhost:3000/dashboard?token=${token}&role=${user.role}`);
+    // } else {
+    //     res.redirect(`http://localhost:3000/dashboard2?token=${token}&role=${user.role}`);
+    // }
+    res.redirect(`http://localhost:3000/google/success?token=${token}&role=${user.role}&id=${user.id}&email=${user.email}`);
+
   })
 
 passport.use(new googleAuthStrategy({
@@ -138,10 +149,11 @@ passport.use(new googleAuthStrategy({
     scope:["profile","email"]
 
 },(acessToken,RefreshToken,profile,done)=>{
+    // console.log(profile)
     try {
         const email=profile.emails[0].value;
         const getquery="select * from Users2 where email=?";
-        const insQuery="insert into Users2 (social_login_provider,   social_login_id,name,email,password) values(?,?,?,?,?)"
+        const insQuery="insert into Users2 (social_login_provider,   social_login_id,name,email,password,image) values(?,?,?,?,?,?)"
         db.query(getquery,[email],(err,data)=>{
             if(err){
                 console.log(err)
@@ -150,8 +162,8 @@ passport.use(new googleAuthStrategy({
             if(data.length > 0){
                 return done(null,data[0])
             }else{
-                const user={social_login_provider:'google',social_login_id:profile.id,name:profile.displayName,email:email,password:null}
-                db.query(insQuery,[user.social_login_provider,user.social_login_id,user.name,user.email,user.password],(err,results)=>{
+                const user={social_login_provider:'google',social_login_id:profile.id,name:profile.displayName,email:email,password:null,image:profile.photos[0].value}
+                db.query(insQuery,[user.social_login_provider,user.social_login_id,user.name,user.email,user.password,user.image],(err,results)=>{
                     if(err){
                         console.log(err)
                         return done(err,null)
@@ -178,6 +190,76 @@ passport.deserializeUser((id,done)=>{
     db.query(query,[id],(err,data)=>{
         if(err){
             console.log(err);
+            return done(err,null)
+        }
+        return done(null,data[0])
+    })
+})
+
+// for facebook
+
+app.get("/auth/facebook",passport.authenticate("facebook",{scope:["email"]}))
+app.get("/auth/facebook/callback",passport.authenticate("facebook",{}),(req,res)=>{
+    const user = req.user;
+    const token = jwt.sign(
+      { email: user.email, role: user.role, id: user.id },
+      process.env.JWTSECRET,
+      { expiresIn: "1h" } 
+    )
+  
+    // if (user.role === 1) {
+    //     res.redirect(`http://localhost:3000/dashboard?token=${token}&role=${user.role}`);
+    // } else {
+    //     res.redirect(`http://localhost:3000/dashboard2?token=${token}&role=${user.role}`);
+    // }
+    res.redirect(`http://localhost:3000/google/success?token=${token}&role=${user.role}&id=${user.id}&email=${user.email}`);
+})
+passport.use(new FacebookStrategy({
+    clientID:process.env.FACEBOOKAPPID,
+    clientSecret:process.env.FACEBOOKAPPSECRET,
+    callbackURL:process.env.CALLBACKURL2,
+    profileFields:["id","displayName","photos","email"]
+},
+    async(acessToken,RefreshToken,profile,done)=>{
+        try {
+            const email=profile.emails[0].value;
+            const getQuery="select * from Users2 where email=?";
+            const insQuery="insert into Users2 (social_login_provider,   social_login_id,name,email,password,image) values (?,?,?,?,?,?)";
+            db.query(getQuery,[email],(err,data)=>{
+                // console.log(data)
+                if(err){
+                    console.log(err)
+                    return done(err,null)
+                }
+                if(data.length > 0){
+                    // console.log(1)
+                    return done(null,data[0])
+                }else{
+                    // console.log(2)
+                    const user={social_login_provider:'facebook',social_login_id:profile.id,name:profile.displayName,email:email,password:null,image:profile.photos[0].value}
+                    // console.log(user)
+                    db.query(insQuery,[user.social_login_provider,user.social_login_id,user.name,user.email,user.password,user.image],(err,results)=>{
+                        if(err){
+                            return done(err,null)
+                        }
+                        user.id=results.insertId;
+                        return done(null,user)
+                    })
+                }
+            })
+        } catch (error) {
+            return done(error,null)
+        }
+    }
+))
+
+passport.serializeUser((user,done)=>{
+    return done(null,user.id)
+})
+passport.deserializeUser((id,done)=>{
+    const query="select * from Users2 where id=?";
+    db.query(query,[id],(err,data)=>{
+        if(err){
             return done(err,null)
         }
         return done(null,data[0])
@@ -211,7 +293,7 @@ app.patch("/updateStatus/:id",(req,res)=>{
         }
         res.status(200).json(data)
     })
-    
+     
 })
 
 
@@ -224,10 +306,20 @@ app.get("/details/:email",(req,res)=>{
         }
         // console.log(data[0])
         const user=data[0]
-        res.json({name:user.name,email:user.email,profileimage:user.image})
+        res.json({name:user.name,email:user.email,profileimage:user.image,social_login_provider:user.social_login_provider})
     })
 })
 
+app.get("/event/:id",(req,res)=>{
+    const id=req.params.id;
+    const query="select * from Events2 as e join EventTickets2 et on et.event_id=e.id where   e.eventDate >= ? and e.id=?    LIMIT 5  "
+    db.query(query,[yearDateMonth,id],(err,data)=>{
+        if(err){
+            console.log(err)
+        }
+        res.json(data[0])
+    })
+})
 app.listen(process.env.SERVER_PORT,()=>{
     console.log(`server listened at port ${process.env.SERVER_PORT}`)
 })

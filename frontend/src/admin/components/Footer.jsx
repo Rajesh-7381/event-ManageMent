@@ -1,5 +1,5 @@
 import React from 'react';
-import './dashboard.css';
+import './style.css';
 
 const Footer = () => {
     const today=new Date();

@@ -1,0 +1,44 @@
+According to the given task I developed Event Management System using Frontend technologies like React & Backend technologies like Node & Database like MySQL. 
+it was designed rabc format. if user they go userdashboard if admin they can go admin dashboard
+This Project is web based application that allows admin to create an event and allow users to book that event and manage events.
+----
+
+The architecture of the Project is to design scalable and modular, with each component interacting with each other through APIs. 
+The frontend is responsible for handling user interactios and the backend handles business logic and API requests. Database stores and retrieve the data.
+-----
+
+One of the Key features of the project is event creation which allows admin to create a new event with details such as title, description, date, time, location, pricing, ticket type, and quantity.
+ This feature crates and Restful APIs interact with backend which validates data and creates a new event record in the database.
+ ------
+
+Another key feature of this project is when Admin creates a new event then that event will be shown by the user. 
+When user is going to book the event ticket, then there will be two ticket types such as general ticket and vip ticket. After choosing the type of ticket, user have to select the quantity of the ticket that he want to book.
+ After booking the ticket he will be waiting for the response given by admin. If admin confirm the ticket then the booking will be successful, and if admin cancel the ticket then the booking will be rejected.
+------ 
+
+In backend side I used MVC pattern. In MVC pattern I have done authentication and authorization using third party library that is JWT and Passport.
+ Every route is protected, without any role they cannot able to read data.
+ ----------
+
+In Database side I have created ems db and this db contain user, events, eventTickets, ticketBooks and feedBack tables. 
+In user table the data of user will be stored. When admin creates a new event that event will be stored in events and eventTickets table. 
+When user book and event that event will be stored in ticketBooks table. When user give feed back then then this feed back data will be stored in feedBack table.
+--------
+
+One special feature of this project is that whoever trying to login for the first time, he will be the admin and after that all will be the users.
+
+Before ending I have created special feature google through login that is using Passport library.
+
+    
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,11 +4,13 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
+import Swal from 'sweetalert2';
 
 const Order = () => {
     const [data, setData] = useState([]);
-
+    // console.log(data)
     useEffect(() => {
+        document.title='OrderCheck'
         // updateStatus(); 
         fetchDetails();
     }, []);
@@ -18,6 +20,7 @@ const Order = () => {
             const response = await axios.get("http://localhost:8081/userDetails");
             // console.log(response.data)
             setData(response.data);
+            console.log(data)
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -27,9 +30,25 @@ const Order = () => {
         // alert( id)
         // const status=newStatus
         try {
-                await axios.patch(`http://localhost:8081/updateStatus/${id}`, { status: newStatus });
-                
+            const confirmed=Swal.fire({
+                title: "Are you sure?",
+                text: "You Changed Ticket Booking Status",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, Click it!"
+              })
+                if ((await confirmed).isConfirmed) {
+                  await axios.patch(`http://localhost:8081/updateStatus/${id}`, { status: newStatus })
+                  Swal.fire({
+                    title: `${newStatus}!`,
+                    text: `Ticket ${newStatus}`,
+                    icon: "success"
+                  });
+                }
                 await fetchDetails(); 
+                
             } catch (error) {
             alert("Error updating status:", error);
         }

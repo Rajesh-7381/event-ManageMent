@@ -13,6 +13,7 @@ import Feedback from './user/Feedback';
 import AdminFeedback from './admin/AdminFeedback';
 import UserProfile from './user/components/UserProfile';
 import ProtectedRoute from './ProtectedRoute ';
+import Success from './Success';
 
 function App() {
   return (
@@ -21,11 +22,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/google/success" element={<Success />} />
           <Route path="/dashboard" element={<ProtectedRoute roleRequired="1"><Dashboard /></ProtectedRoute> } />
           <Route path="/addedit/:id?" element={<ProtectedRoute roleRequired="1"><AddEditEvent /></ProtectedRoute>}/>
           <Route path="/adminfeedback"  element={<ProtectedRoute roleRequired="1"><AdminFeedback /></ProtectedRoute>  }/>
           <Route path="/dashboard2"  element={<ProtectedRoute roleRequired="0"><Dashboard2 /></ProtectedRoute>  }/>
-          <Route path="/bookevent"  element={<ProtectedRoute roleRequired="0"><BookEvent /></ProtectedRoute>  }/>
+          <Route path="/bookevent/:id?"  element={<ProtectedRoute roleRequired="0"><BookEvent /></ProtectedRoute>  }/>
+          {/* <Route path="/bookevent/:event"  element={<ProtectedRoute roleRequired="0"><BookEvent /></ProtectedRoute>  }/> */}
           <Route path="/status"  element={<ProtectedRoute roleRequired="0"> <OrderCheck /></ProtectedRoute>  }/>
           <Route path="/feedback"  element={<ProtectedRoute roleRequired="0"><Feedback /></ProtectedRoute>  }/>
           <Route path="/userprofile"  element={<ProtectedRoute roleRequired="0"><UserProfile /></ProtectedRoute>  }/>

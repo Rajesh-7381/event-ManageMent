@@ -10,6 +10,7 @@ const Profile = () => {
   const email = sessionStorage.getItem("email");
 
   useEffect(() => {
+    document.title="Profile"
     fetchDetails();
   }, []);
 

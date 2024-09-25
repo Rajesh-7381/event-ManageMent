@@ -8,6 +8,7 @@ const AdminFeedback = () => {
     const [feedData, setfeedData] = useState([]);
 
     useEffect(() => {
+        document.title="FeedBack"
         fetchFeedBack();
     }, []);
 

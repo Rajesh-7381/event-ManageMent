@@ -69,6 +69,7 @@ const bEvent = {
 },
 feedback:async (data) => {
   const { event_name, feedback, user_id } = data;
+  // console.log(data)
   const query = "INSERT INTO feedback (event_name, feedback, user_id) VALUES (?, ?, ?)";
   try {
       const [result] = await db.promise().query(query, [event_name, feedback, user_id]);

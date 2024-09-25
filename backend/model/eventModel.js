@@ -35,7 +35,7 @@ const event = {
     },
     upComing: async () => {
         
-        const query = ` SELECT e.id, e.title, e.privacy, e.description, e.eventDate, e.eventTime, e.location, e.organizer_id, et.general_ticket_price, et.vip_ticket_price, et.quantity     FROM Events2 as e     JOIN EventTickets2 et ON et.event_id = e.id     WHERE eventDate >= ?     LIMIT 5`;
+        const query = ` SELECT e.event_image, e.id, e.title, e.privacy, e.description, e.eventDate, e.eventTime, e.location, e.organizer_id, et.general_ticket_price, et.vip_ticket_price, et.quantity     FROM Events2 as e     JOIN EventTickets2 et ON et.event_id = e.id     WHERE eventDate >= ?     LIMIT 5`;
     
         return new Promise((resolve, reject) => {
             db.query(query, [yearDateMonth], (err, data) => {

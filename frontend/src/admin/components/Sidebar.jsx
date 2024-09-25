@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './dashboard.css';
+import './style.css';
 
 const Sidebar = () => {
     return (
-        <div className="sidebar">
+        <div className="sidebar" style={{width:'150px'}}>
             <ul>
                 <li><Link to="/dashboard">Home</Link></li>
                 <li><Link to="/addedit">Create</Link></li>

@@ -18,6 +18,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const newErrors = validateForm(name, email, password, profileImage);
     setErrors(newErrors);
   
@@ -28,7 +29,7 @@ const Register = () => {
         formData.append('email', email);
         formData.append('password', password);
         formData.append('profile', profileImage);
-  
+       
         const emailexistCheck = await axios.post(`http://localhost:8081/api/emailCheck/${email}`);
         if (emailexistCheck.data.emailExists) {
           Swal.fire({
@@ -39,7 +40,7 @@ const Register = () => {
           });
           return; 
         }
-
+        
         const response = await axios.post('http://localhost:8081/api/register', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -60,7 +61,7 @@ const Register = () => {
 
   const validateForm = (name, email, password,profileImage) => {
     const errors = {};
-
+    const imagesize=1024*1024*2;
     if (!name.trim()) {
       errors.name = "Name is required";
     } else if (name.length < 4) {
@@ -75,11 +76,20 @@ const Register = () => {
 
     if (!password.trim()) {
       errors.password = "Password is required";
-    } else if (password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
+    } else if (password.length > 6 || password.length < 3) {
+      errors.password = "Password is minium 3 and maxium 6";
+    }else if(!/^(?=.*[A-Za-z])(?=.*\d)[a-zA-Z\d]{3,6}$/.test(password)){
+    // }else if(/^[a-z,A-Z!@$%^&]){
+      errors.password = "Password isuppercase lowecase and letters and numbers";
     }
+     
     if (!profileImage) {
       errors.profile = "Profile image is required";
+    }
+     else if (profileImage.size > imagesize) {
+      errors.profile = "Profile image exceeds 2MB";
+    } else if (!['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(profileImage.type)) {
+      errors.profile = "Profile image should be jpg, jpeg, png, or webp";
     }
 
     return errors;
@@ -96,10 +106,14 @@ const Register = () => {
     }else if (name === 'password') {
       setPassword(value);
     }else if (name === 'profile') {
-      setProfileImage(files[0]);
+      
+      if (files && files.length > 0) {
+        setProfileImage(files[0]);
+      }
+      
     }
   };
-
+  
   return (
     <div className="register-container">
       <div className="register-card">
@@ -132,7 +146,7 @@ const Register = () => {
           <div className="input-group">
             <label htmlFor="password" style={{display:"flex"}}><b>Password:</b></label>
             <input
-              type="password"
+              type="text"
               id="password"
               name="password"
               value={password}
@@ -147,9 +161,8 @@ const Register = () => {
               type="file"
               id="profile"
               name="profile"
-             
+              accept='.jpeg,jpg,.png,.webp'
               onChange={handleChange}
-             
             />
             {errors.profile && (<span style={{color:"red"}}>{errors.profile}</span>)}
           </div>

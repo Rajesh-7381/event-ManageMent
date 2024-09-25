@@ -7,7 +7,7 @@
 
 .main-content {
   display: flex;
-  flex: 1;
+  flex: 1;  /* means shorthand property of flex-grow means how much space an element should take up in a container relative to other */
 }
 
 .book-event-container {
