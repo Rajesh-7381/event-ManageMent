@@ -373,3 +373,8 @@ slider
           </div>
 
           
+
+          Docker file: It is a script containing a set of instructions on how to build an image.
+          Docker image: It is a template for running applications created from the Docker file. It serves to launch containers.
+          Docker container: A running instance of the Docker image. It is a lightweight, stand-alone, and executable software package that includes everything needed to run your application.
+          To put it simply, a Dockerfile defines the steps to create a Docker image, which acts as a template for initiating processes known as containers.
