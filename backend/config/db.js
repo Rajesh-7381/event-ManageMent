@@ -6,7 +6,7 @@ const db=mysql.createConnection({
     host:process.env.LOCALHOST,
     user:process.env.ROOT,
     password:process.env.PASSWORD,
-    port:process.env.PORT,
+    port:process.env.DB_PORT,
     database:process.env.DATABASE
 })
 

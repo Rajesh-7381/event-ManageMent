@@ -5,8 +5,8 @@ const cors=require("cors")
 const bodyparser=require("body-parser")
 const session = require('express-session');
 const passport=require("passport")
-const googleAuthStrategy=require("passport-google-oauth20").Strategy
-const FacebookStrategy = require('passport-facebook').Strategy;
+// const googleAuthStrategy=require("passport-google-oauth20").Strategy
+// const FacebookStrategy = require('passport-facebook').Strategy;
 const path=require("path")
 const jwt=require("jsonwebtoken")
 const fs = require('fs'); 
@@ -123,6 +123,148 @@ app.post("/addeditEvent/:event",upload.single('eventImage'),(req,res)=>{
 }) 
 
 
+// app.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}))
+
+// app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
+//     const user = req.user;
+//     const token = jwt.sign(
+//       { email: user.email, role: user.role, id: user.id },
+//       process.env.JWTSECRET,
+//       { expiresIn: "1h" } 
+//     )
+  
+//     // if (user.role === 1) {
+//     //     res.redirect(`http://localhost:3000/dashboard?token=${token}&role=${user.role}`);
+//     // } else {
+//     //     res.redirect(`http://localhost:3000/dashboard2?token=${token}&role=${user.role}`);
+//     // }
+//     res.redirect(`http://localhost:3000/google/success?token=${token}&role=${user.role}&id=${user.id}&email=${user.email}`);
+
+//   })
+
+// passport.use(new googleAuthStrategy({
+//     clientID:process.env.CLIENTID,
+//     clientSecret:process.env.CLIENTSECRET,
+//     callbackURL:process.env.CALLBACKURL,
+//     scope:["profile","email"]
+
+// },(acessToken,RefreshToken,profile,done)=>{
+//     // console.log(profile)
+//     try {
+//         const email=profile.emails[0].value;
+//         const getquery="select * from Users2 where email=?";
+//         const insQuery="insert into Users2 (social_login_provider,   social_login_id,name,email,password,image) values(?,?,?,?,?,?)"
+//         db.query(getquery,[email],(err,data)=>{
+//             if(err){
+//                 console.log(err)
+//                 return done(err,null)
+//             }
+//             if(data.length > 0){
+//                 return done(null,data[0])
+//             }else{
+//                 const user={social_login_provider:'google',social_login_id:profile.id,name:profile.displayName,email:email,password:null,image:profile.photos[0].value}
+//                 db.query(insQuery,[user.social_login_provider,user.social_login_id,user.name,user.email,user.password,user.image],(err,results)=>{
+//                     if(err){
+//                         console.log(err)
+//                         return done(err,null)
+//                     }
+//                     user.id=results.insertId;
+//                     return done(null,user)
+//                 })
+//             }
+           
+//         })
+//     } catch (error) {
+//             console.log("error in passport",error)
+//             return done(error,null)
+//     }
+// }
+// ))
+
+// passport.serializeUser((user,done)=>{
+//     return done(null,user.id)
+// })
+
+// passport.deserializeUser((id,done)=>{
+//     const query="select * from Users2 where id=?";
+//     db.query(query,[id],(err,data)=>{
+//         if(err){
+//             console.log(err);
+//             return done(err,null)
+//         }
+//         return done(null,data[0])
+//     })
+// })
+
+// // for facebook
+
+// app.get("/auth/facebook",passport.authenticate("facebook",{scope:["email"]}))
+// app.get("/auth/facebook/callback",passport.authenticate("facebook",{}),(req,res)=>{
+//     const user = req.user;
+//     const token = jwt.sign(
+//       { email: user.email, role: user.role, id: user.id },
+//       process.env.JWTSECRET,
+//       { expiresIn: "1h" } 
+//     )
+  
+//     // if (user.role === 1) {
+//     //     res.redirect(`http://localhost:3000/dashboard?token=${token}&role=${user.role}`);
+//     // } else {
+//     //     res.redirect(`http://localhost:3000/dashboard2?token=${token}&role=${user.role}`);
+//     // }
+//     res.redirect(`http://localhost:3000/google/success?token=${token}&role=${user.role}&id=${user.id}&email=${user.email}`);
+// })
+// passport.use(new FacebookStrategy({
+//     clientID:process.env.FACEBOOKAPPID,
+//     clientSecret:process.env.FACEBOOKAPPSECRET,
+//     callbackURL:process.env.CALLBACKURL2,
+//     profileFields:["id","displayName","photos","email"]
+// },
+//     async(acessToken,RefreshToken,profile,done)=>{
+//         try {
+//             const email=profile.emails[0].value;
+//             const getQuery="select * from Users2 where email=?";
+//             const insQuery="insert into Users2 (social_login_provider,   social_login_id,name,email,password,image) values (?,?,?,?,?,?)";
+//             db.query(getQuery,[email],(err,data)=>{
+//                 // console.log(data)
+//                 if(err){
+//                     console.log(err)
+//                     return done(err,null)
+//                 }
+//                 if(data.length > 0){
+//                     // console.log(1)
+//                     return done(null,data[0])
+//                 }else{
+//                     // console.log(2)
+//                     const user={social_login_provider:'facebook',social_login_id:profile.id,name:profile.displayName,email:email,password:null,image:profile.photos[0].value}
+//                     // console.log(user)
+//                     db.query(insQuery,[user.social_login_provider,user.social_login_id,user.name,user.email,user.password,user.image],(err,results)=>{
+//                         if(err){
+//                             return done(err,null)
+//                         }
+//                         user.id=results.insertId;
+//                         return done(null,user)
+//                     })
+//                 }
+//             })
+//         } catch (error) {
+//             return done(error,null)
+//         }
+//     }
+// ))
+
+// passport.serializeUser((user,done)=>{
+//     return done(null,user.id)
+// })
+// passport.deserializeUser((id,done)=>{
+//     const query="select * from Users2 where id=?";
+//     db.query(query,[id],(err,data)=>{
+//         if(err){
+//             return done(err,null)
+//         }
+//         return done(null,data[0])
+//     })
+// })
 
 app.get("/userDetails",(req,res)=>{
     const query="SELECT  tb.id,u.name AS username,e.title, e.title AS event_name, t.ticket_type AS ticket_type,tb.status, tb.purchase_date, tb.quantity, t.general_ticket_price AS ticket_price, tb.total_price FROM      ticketBooks2 tb JOIN      Users2 u ON tb.user_id = u.id JOIN      EventTickets2 t ON tb.event_ticket_id = t.event_id JOIN Events2 e ON t.event_id = e.id;"
