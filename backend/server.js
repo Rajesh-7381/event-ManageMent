@@ -120,7 +120,7 @@ app.post("/addeditEvent/:event",upload.single('eventImage'),(req,res)=>{
         }) 
         return res.json({message:"event created"})
     })
-}) 
+})  
 
 
 // app.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}))
